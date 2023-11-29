@@ -26,7 +26,7 @@ The `vf2-rootfs.img` you can use cmd below to flash to nvme:
 sudo dd if=vf2-rootfs.img of=/dev/[nvme-device] bs=64k iflag=fullblock oflag=direct conv=fsync status=progress
 ```
 
-If the bootloader you want to use it that in sd card, you can `dd` the `sd-uboot.img` to sd card:
+If the bootloader you want to use it that in sd card, you can `dd` the `vf2-rootfs.img` to sd card:
 ```bash
 sudo dd if=vf2-rootfs.img of=/dev/[sd-device] bs=64k iflag=fullblock oflag=direct conv=fsync status=progress
 ```

@@ -1,36 +1,39 @@
-name: Auto Build Debian riscv64 Unmatched image 
+name: Auto Build Debian riscv64 vf2 image 
 on:
   push:
     tags:
       - '*'
 jobs:
+
   build-all-os:
-    runs-on: ubuntu-latest
+
+    runs-on: ubuntu-22.04 
     permissions:
       contents: write
-    steps:
-        - uses: actions/checkout@v2
 
+    steps:
+        - uses: actions/checkout@v4
+
+        - name: "Update APT sources"
+          run: |
+            sudo apt update
+          
         - name: Install depends
           run: sudo apt install -y qemu-user-static qemu-system qemu-utils qemu-system-misc binfmt-support
 
         - name: Prepare
           run: |
-            echo ${{runner.workspace}}
+            ls ${{runner.workspace}}
             mkdir -p image 
-        - name: Build
+
+        - name: Create vf2 rootfs
           run: |
-            export DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1
-            docker-compose build
-        - name: Create Nvme Image
-          run: |
-            export DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 nvme
-            docker-compose up nvme 
+            export DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 vf2 
+            docker-compose up vf2 
             ls -l image/*
         - name: Release
           uses: softprops/action-gh-release@v1
           if: startsWith(github.ref, 'refs/tags/')
           with:
             files: |
-              image/nvme-rootfs*.img.xz
-              image/sd-uboot*.img
+              image/vf2-rootfs*.img.xz
