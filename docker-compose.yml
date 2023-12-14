@@ -10,3 +10,6 @@ services:
         # build host dir with docker dir
     volumes:
         - './image:/outport'
+    # vf2 kernel passed here
+    environment:
+        - KERNEL_VERSION=${KERNEL_VERSION}

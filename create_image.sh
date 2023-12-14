@@ -2,6 +2,7 @@
 
 # It woule be good to test it outside of Docker
 OUT_DIR="$1"
+KERNEL_VERSION="$2"
 
 ROOTFS_IMG="${OUT_DIR}/vf2-rootfs.img"
 SD_DD_OPTS="bs=4k iflag=fullblock oflag=direct conv=fsync status=progress"
@@ -48,13 +49,29 @@ function make_image(){
     kpartx -d ${ROOTFS_IMG}
 }
 
+function get_kernel_deb(){
+    vf2_image_repo="https://github.com/yuzibo/vf2-linux"
+    kernel_deb_url="${vf2_image_repo}/releases/download/${KERNEL_VERSION}/vf2-mainline-kernel-gcc-13.tar.gz"
+
+    wget --no-check-certificate ${kernel_deb_url}
+
+    tar -zxvf vf2-mainline-kernel-gcc-13.tar.gz -C /tmp
+
+}
+
 function copy_rootfs(){
-    
+
+    echo "copy rootfs"
     # from docker image has been defined 
-    cp -a /builder/rv64-port/* "${ROOTFS_POINT}"
+    cp -av /builder/rv64-port/* "${ROOTFS_POINT}"
 
     # Copy the rootfs
-    cp /usr/bin/qemu-riscv64-static ${ROOTFS_POINT}/usr/bin/
+    cp -v /usr/bin/qemu-riscv64-static ${ROOTFS_POINT}/usr/bin/
+
+    # should judge deb if exist
+    get_kernel_deb
+
+    cp -v /tmp/vf2_kernel_deb/*.deb ${ROOTFS_POINT}/tmp
     chroot "${ROOTFS_POINT}" qemu-riscv64-static /bin/sh /setup_rootfs.sh
     rm "${ROOTFS_POINT}/setup_rootfs.sh" "${ROOTFS_POINT}/usr/bin/qemu-riscv64-static"
 
@@ -67,7 +84,7 @@ function copy_rootfs(){
 make_image
 
 if [ $? -eq 0 ]; then
-    echo "make_immge executed successfully."
+    echo "make_image executed successfully."
     # Now compress the image
     echo "Compressing the image: ${ROOTFS_IMG}"
     cd "${OUT_DIR}" && xz -T0 "${ROOTFS_IMG}"

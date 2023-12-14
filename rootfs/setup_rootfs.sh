@@ -1,5 +1,6 @@
 #!/bin/sh
 #
+set -ex
 
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
@@ -33,18 +34,61 @@ chown debian:debian /home/debian
 # Set password to 'debian'
 usermod --password "$(echo debian | openssl passwd -1 -stdin)" debian 
 
-# update-initramfs -u
-#rm /boot/initrd*
-#update-initramfs -c -k all
-
-# create /boot/efi
-mkdir -p /boot/efi
-
 # Set up fstab
 cat > /etc/fstab <<EOF
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 /dev/mmcblk1p2 /boot/efi      vfat    umask=0077      0       1
 EOF
+
+apt install -f /tmp/*.deb
+
+# change device tree
+echo "===== ln -s dtb files ====="
+file_prefix="/usr/lib/linux-image-*"
+
+file_path=$(ls -d $file_prefix)
+
+if [ -e "$file_path" ]; then
+  echo "File found: $file_path"
+  lib_dir=$file_path
+else
+  echo "File not found: $file_path"
+fi
+
+kernel_image=${lib_dir##*/}
+
+cd ${lib_dir}/starfive/
+ln -s jh7110-starfive-visionfive-2-v1.2a.dtb jh7110-visionfive-v2.dtb
+cd - 
+
+#update-initramfs -c -k all
+# update u-boot
+
+# cp your latest dtb file,e.g, cp /usr/lib/linux-image-xx-riscv64
+# need you confirm it here
+apt install u-boot-menu
+cat <<EOF >> /etc/default/u-boot
+U_BOOT_PARAMETERS="rw console=tty0 console=ttyS0,115200 earlycon rootwait stmmaceth=chain_mode:1 selinux=0"
+EOF
+
+dpkg-reconfigure ${kernel_image}
+
+# boot from sd card
+sed -i -e 's|append |append root=/dev/mmcblk1p3 |' /boot/extlinux/extlinux.conf
+
+# double check
+cat /boot/extlinux/extlinux.conf
+
+# create /boot/efi
+mkdir -p /boot/efi
+
+# setup uboot uEnv
+cat <<EOF > /boot/uEnv.txt
+kernel_comp_addr_r=0xb0000000
+kernel_comp_size=0x10000000
+EOF
+
+
 
 # Set hostname
 echo vf2 > /etc/hostname
@@ -57,13 +101,7 @@ EOF
 # Add needed modules in initrd
 #echo "nvme" >> /etc/initramfs-tools/modules
 
-# cp your latest dtb file,e.g, cp /usr/lib/linux-image-xx-riscv64
-# need you confirm it here
-#cp /usr/lib/linux-image-*/sifive/hifive-unmatched-a00.dtb /boot/
-#echo U_BOOT_FDT=\"hifive-unmatched-a00.dtb\" >> /etc/default/u-boot
-#echo U_BOOT_PARAMETERS=\"rw rootwait console=ttySIF0,115200 earlycon\" >> /etc/default/u-boot
 
-u-boot-update
 
 # 
 # Enable system services

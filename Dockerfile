@@ -1,6 +1,8 @@
 FROM debian:sid as builder
 MAINTAINER Bo YU "tsu.yubo@gmail.com"
 
+ENV KERNEL_VERSION=${KERNEL_VERSION}
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN --mount=type=cache,sharing=shared,target=/var/cache \
@@ -40,5 +42,5 @@ COPY --from=build_rootfs /build/rv64-sid/ ./rv64-port/
 COPY create_image.sh build.sh ./
 COPY rootfs/setup_rootfs.sh ./rv64-port/
 
-CMD eatmydata /builder/build.sh
+CMD eatmydata /builder/build.sh ${KERNEL_VERSION}
 

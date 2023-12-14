@@ -14,6 +14,12 @@ jobs:
     steps:
         - uses: actions/checkout@v4
 
+        - name: Set up Git
+          run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+        - name: Get tag name
+          run: echo "Tag name is ${{ github.ref_name }}"
+
         - name: "Update APT sources"
           run: |
             sudo apt update
@@ -29,7 +35,7 @@ jobs:
         - name: Create vf2 rootfs
           run: |
             export DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 vf2 
-            docker-compose up vf2 
+            KERNEL_VERSION=${{ github.ref_name }} docker-compose up vf2 
             ls -l image/*
         - name: Release
           uses: softprops/action-gh-release@v1

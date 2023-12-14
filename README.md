@@ -7,12 +7,14 @@ sudo apt install -y qemu-user-static qemu-system qemu-utils qemu-system-misc bin
 Need docker docker-compose installed, then type:
 ```bash
 sudo DOCKER_BUILDKIT=1 docker-compose build vf2 
-sudo docker-compose up vf2 
+
+# need kernel tag from
+# https://github.com/yuzibo/vf2-linux/tags
+sudo KERNEL_VERSION=vf2-v6.6.7-v1 docker-compose up vf2
 ```
-Or:
-```bash
-sudo make unmatched
-```
+
+Please note, any modify need to be done with step one.
+
 Two image files will be generated into `image`:
 
 ```bash
