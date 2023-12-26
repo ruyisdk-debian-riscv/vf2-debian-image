@@ -42,7 +42,7 @@ cat > /etc/fstab <<EOF
 /dev/mmcblk1p2 /boot/efi      vfat    umask=0077      0       1
 EOF
 
-#apt install -f /tmp/*.deb
+apt install -f /tmp/*.deb
 
 mv /tmp/*.deb /boot
 
