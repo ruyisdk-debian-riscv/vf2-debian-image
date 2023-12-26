@@ -38,7 +38,7 @@ RUN --mount=type=cache,sharing=shared,target=/var/cache \
 
 FROM builder as build_image
 WORKDIR /builder
-COPY --from=build_rootfs /build/rv64-sid/ ./rv64-port/
+#COPY --from=build_rootfs /build/rv64-sid/ ./rv64-port/
 COPY create_image.sh build.sh ./
 COPY rootfs/setup_rootfs.sh ./
 

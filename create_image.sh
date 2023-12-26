@@ -84,7 +84,7 @@ function copy_rootfs(){
 
     cp -v /tmp/vf2_kernel_deb/*.deb ${ROOTFS_POINT}/tmp
     cp -v /builder/setup_rootfs.sh ${ROOTFS_POINT}
-    chroot "${ROOTFS_POINT}" qemu-riscv64-static /bin/sh /setup_rootfs.sh
+    chroot "${ROOTFS_POINT}" qemu-riscv64-static /bin/sh ${ROOTFS_POINT}/setup_rootfs.sh
     rm "${ROOTFS_POINT}/setup_rootfs.sh" "${ROOTFS_POINT}/usr/bin/qemu-riscv64-static"
 
     umount "${ROOTFS_POINT}" 
