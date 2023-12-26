@@ -61,6 +61,12 @@ fi
 
 kernel_image=${lib_dir##*/}
 
+# set default dtb file, please verify your board version
+
+cd ${lib_dir}/starfive/
+ln -s jh7110-starfive-visionfive-2-v1.2a.dtb jh7110-visionfive-v2.dtb
+cd -
+
 
 # cp your latest dtb file,e.g, cp /usr/lib/linux-image-xx-riscv64
 # need you confirm it here
@@ -70,20 +76,11 @@ EOF
 
 cat /boot/extlinux/extlinux.conf
 
-#dpkg-reconfigure ${kernel_image}
 
-# update u-boot
-#update-initramfs -c -k all
+sed -i -e 's|append |append root=/dev/mmcblk1p3 |' /boot/extlinux/extlinux.conf
 
 u-boot-update
 
-# boot from sd card
-cat <<EOF >> /boot/scripts.txt
-sed -i -e 's|root=[^ ]*|root=/dev/mmcblk1p3|' /boot/extlinux/extlinux.conf
-cd ${lib_dir}/starfive/
-ln -s jh7110-starfive-visionfive-2-v1.2a.dtb jh7110-visionfive-v2.dtb
-cd - 
-EOF
 
 # double check
 cat /boot/extlinux/extlinux.conf

@@ -29,11 +29,6 @@ RUN --mount=type=cache,sharing=shared,target=/var/cache \
 #WORKDIR /build
 #COPY rootfs/multistrap_nvme.conf multistrap.conf
 
-#RUN --mount=type=cache,sharing=shared,target=/var/cache \
-#    --mount=type=cache,sharing=shared,target=/var/lib/apt/lists \
-#    --mount=type=tmpfs,target=/usr/share/man \
-#    --mount=type=tmpfs,target=/usr/share/doc \
-#    eatmydata multistrap -f multistrap.conf
 
 
 FROM builder as build_image
@@ -44,4 +39,3 @@ COPY rootfs/setup_rootfs.sh ./rv64-port/
 COPY rootfs/setup_rootfs.sh /tmp 
 
 CMD /builder/build.sh ${KERNEL_VERSION}
-
