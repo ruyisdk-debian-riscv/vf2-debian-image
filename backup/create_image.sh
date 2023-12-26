@@ -1,5 +1,4 @@
 #!/bin/bash
-# refer to https://github.com/revyos/mkimg-th1520/blob/main/mkrootfs.sh
 
 set -ex
 
@@ -9,10 +8,6 @@ KERNEL_VERSION="$2"
 
 ROOTFS_IMG="${OUT_DIR}/vf2-rootfs.img"
 SD_DD_OPTS="bs=4k iflag=fullblock oflag=direct conv=fsync status=progress"
-
-
-BASE_TOOLS="binutils file tree sudo bash-completion u-boot-menu initramfs-tools openssh-server network-manager dnsmasq-base libpam-systemd ppp wireless-regdb wpasupplicant libengine-pkcs11-openssl iptables systemd-timesyncd vim usbutils libgles2 parted exfatprogs systemd-sysv mesa-vulkan-drivers"
-EXTRA_TOOLS="i2c-tools net-tools ethtool xdotool"
 
 function make_image(){
 
@@ -51,12 +46,6 @@ function make_image(){
     #mount ${LOOPDEV} /mnt
     #debootstrap --arch=riscv64 --keyring /usr/share/keyrings/debian-ports-archive-keyring.gpg --include=debian-ports-archive-keyring,ca-certificates  unstable ${ROOTFS_POINT} https://mirror.iscas.ac.cn/debian-ports
     #
-    mmdebstrap -v --architectures=riscv64 \
-    --include="ca-certificates debian-archive-keyring locales dosfstools \
-        $BASE_TOOLS $EXTRA_TOOLS " \
-    sid "${ROOTFS_POINT}" \
-    "deb http://deb.debian.org/debian/ sid main"
-
     copy_rootfs
 
     kpartx -d ${ROOTFS_IMG}
@@ -66,15 +55,17 @@ function get_kernel_deb(){
     vf2_image_repo="https://github.com/yuzibo/vf2-linux"
     kernel_deb_url="${vf2_image_repo}/releases/download/${KERNEL_VERSION}/vf2-mainline-kernel-gcc-13.tar.gz"
 
-    wget --no-verbose --no-check-certificate ${kernel_deb_url}
+    wget --no-check-certificate ${kernel_deb_url}
 
     tar -zxvf vf2-mainline-kernel-gcc-13.tar.gz -C /tmp
 
 }
-    
 
 function copy_rootfs(){
 
+    echo "copy rootfs"
+    # from docker image has been defined 
+    cp -av /builder/rv64-port/* "${ROOTFS_POINT}"
 
     # Copy the rootfs
     cp -v /usr/bin/qemu-riscv64-static ${ROOTFS_POINT}/usr/bin/
@@ -83,7 +74,6 @@ function copy_rootfs(){
     get_kernel_deb
 
     cp -v /tmp/vf2_kernel_deb/*.deb ${ROOTFS_POINT}/tmp
-    cp -v /builder/setup_rootfs.sh ${ROOTFS_POINT}
     chroot "${ROOTFS_POINT}" qemu-riscv64-static /bin/sh /setup_rootfs.sh
     rm "${ROOTFS_POINT}/setup_rootfs.sh" "${ROOTFS_POINT}/usr/bin/qemu-riscv64-static"
 

@@ -3,6 +3,8 @@ on:
   push:
     tags:
       - '*'
+    branches:
+      - '*'
 jobs:
 
   build-all-os:
@@ -35,7 +37,7 @@ jobs:
         - name: Create vf2 rootfs
           run: |
             export DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 vf2 
-            KERNEL_VERSION=${{ github.ref_name }} docker-compose up vf2 
+            KERNEL_VERSION=${{ github.ref_name }} docker-compose up vf2
             ls -l image/*
         - name: Release
           uses: softprops/action-gh-release@v1
