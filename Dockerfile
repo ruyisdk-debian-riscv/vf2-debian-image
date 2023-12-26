@@ -40,7 +40,8 @@ FROM builder as build_image
 WORKDIR /builder
 #COPY --from=build_rootfs /build/rv64-sid/ ./rv64-port/
 COPY create_image.sh build.sh ./
-COPY rootfs/setup_rootfs.sh ./
+COPY rootfs/setup_rootfs.sh ./rv64-port/ 
+COPY rootfs/setup_rootfs.sh /tmp 
 
 CMD /builder/build.sh ${KERNEL_VERSION}
 
