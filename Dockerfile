@@ -11,7 +11,7 @@ RUN --mount=type=cache,sharing=shared,target=/var/cache \
     --mount=type=tmpfs,target=/usr/share/doc \
     apt-get update \
     && apt-get install -y eatmydata \
-    && eatmydata apt-get install -y --no-recommends \
+    && eatmydata apt-get install -y --no-install-recommends \
         qemu-user-static \
         binfmt-support gdisk kpartx \
         parted \
