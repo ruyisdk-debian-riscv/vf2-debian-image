@@ -10,7 +10,7 @@ sudo DOCKER_BUILDKIT=1 docker-compose build vf2
 
 # need kernel tag from
 # https://github.com/yuzibo/vf2-linux/tags
-sudo KERNEL_VERSION=vf2-v6.6.7-v1 docker-compose up vf2
+sudo KERNEL_VERSION=vf2-v6.6.8-v1 docker-compose up vf2
 ```
 
 Please note, any modify need to be done with step one.
