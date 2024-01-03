@@ -13,9 +13,12 @@ sudo DOCKER_BUILDKIT=1 docker-compose build vf2
 sudo KERNEL_VERSION=vf2-v6.6.8-v1 docker-compose up vf2
 ```
 
-Please note, any modify need to be done with step one.
+Please note, any modify need to be done with step first.
 
-Two image files will be generated into `image`:
+Because there is no Debian kernel, which was missing some patch to boot vf2, so I have to maintain
+the kernel by myself.
+
+One image files will be generated into `image`:
 
 ```bash
 vf2-rootfs.img.xz
