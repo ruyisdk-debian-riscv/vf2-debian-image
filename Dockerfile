@@ -23,7 +23,7 @@ RUN --mount=type=cache,sharing=shared,target=/var/cache \
         libtool mmdebstrap openssl parted \
         patchutils python3 python3-dev python3-distutils \
         python3-setuptools  swig \
-        systemd-container texinfo zlib1g-dev wget
+        systemd-container texinfo zlib1g-dev wget arch-test
 
 # build rootfs 
 #FROM builder as build_rootfs
