@@ -18,7 +18,11 @@ the kernel by myself.
 
 The kernel repo is [here](https://github.com/yuzibo/vf2-linux/tree/master)
 But I use different branch to generate kernel image which is under tags.
-Now it is based on [vf2-v6.6.8-dev](https://github.com/yuzibo/vf2-linux/tree/vf2-v6.6.8-dev) branch.
+Now it is based on one branch:
+
+[vf2-v6.7-dev](https://github.com/yuzibo/vf2-linux/tree/vf2-v6.7) .
+
+(*-dev is branch and *-v1 is tag for vf2-linux repo)
 
 
 Please note, any modify need to be done with step first.
