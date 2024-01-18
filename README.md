@@ -10,8 +10,12 @@ sudo DOCKER_BUILDKIT=1 docker-compose build vf2
 
 # need kernel tag from
 # https://github.com/yuzibo/vf2-linux/tags
-sudo KERNEL_VERSION=vf2-v6.6.8-v1 docker-compose up vf2
+sudo KERNEL_VERSION=vf2-v6.7-v2 docker-compose up vf2
 ```
+
+Please note, any modify need to be done with step first.
+
+## for vf2 kernel
 
 Because there is no Debian kernel, which was missing some patch to boot vf2, so I have to maintain
 the kernel by myself.
@@ -22,10 +26,11 @@ Now it is based on one branch:
 
 [vf2-v6.7-dev](https://github.com/yuzibo/vf2-linux/tree/vf2-v6.7) .
 
-(*-dev is branch and *-v1 is tag for vf2-linux repo)
+(*-dev is branch and *-v{$num} is tag for vf2-linux repo)
 
+2024/01/19: build image with [vf2-v6.7-v2](https://github.com/yuzibo/vf2-linux/releases/tag/vf2-v6.7-v2)
 
-Please note, any modify need to be done with step first.
+# image
 
 One image files will be generated into `image`:
 
