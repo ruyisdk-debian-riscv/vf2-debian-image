@@ -10,7 +10,7 @@ sudo DOCKER_BUILDKIT=1 docker-compose build vf2
 
 # need kernel tag from
 # https://github.com/yuzibo/vf2-linux/tags
-sudo KERNEL_VERSION=vf2-v6.7-v2 docker-compose up vf2
+sudo KERNEL_VERSION=vf2-v6.7.2-v1 docker-compose up vf2
 ```
 
 Please note, any modify need to be done with step first.
@@ -24,11 +24,13 @@ The kernel repo is [here](https://github.com/yuzibo/vf2-linux/tree/master)
 But I use different branch to generate kernel image which is under tags.
 Now it is based on one branch:
 
-[vf2-v6.7-dev](https://github.com/yuzibo/vf2-linux/tree/vf2-v6.7) .
+[vf2-v6.7.2-dev](https://github.com/yuzibo/vf2-linux/tree/vf2-v6.7.2-dev) .
 
 (*-dev is branch and *-v{$num} is tag for vf2-linux repo)
 
 2024/01/19: build image with [vf2-v6.7-v2](https://github.com/yuzibo/vf2-linux/releases/tag/vf2-v6.7-v2)
+
+2024/01/29: build image with [vf2-v6.7.2-v1](https://github.com/yuzibo/vf2-linux/releases/tag/vf2-v6.7.2-v1)
 
 # image
 
