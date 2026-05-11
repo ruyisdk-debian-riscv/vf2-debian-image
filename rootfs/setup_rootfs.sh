@@ -6,7 +6,6 @@ export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
 
 /var/lib/dpkg/info/base-passwd.preinst install
-/var/lib/dpkg/info/sgml-base.preinst install
 
 mkdir -p /etc/sgml
 mount proc -t proc /proc
@@ -42,37 +41,24 @@ cat > /etc/fstab <<EOF
 /dev/mmcblk1p2 /boot/efi      vfat    umask=0077      0       1
 EOF
 
-apt install -f /tmp/*.deb
+apt-get install linux-image-riscv64 u-boot-menu u-boot-starfive
+apt-get clean
 
-mv /tmp/*.deb /boot
+rm /boot/initrd*
+update-initramfs -c -k all
 
-# change device tree
-echo "===== ln -s dtb files ====="
-file_prefix="/usr/lib/linux-image-*"
 
-file_path=$(ls -d $file_prefix)
 
-if [ -e "$file_path" ]; then
-  echo "File found: $file_path"
-  lib_dir=$file_path
-else
-  echo "File not found: $file_path"
-fi
-
-kernel_image=${lib_dir##*/}
-
-# set default dtb file, please verify your board version
-
-cd ${lib_dir}/starfive/
-ln -s jh7110-starfive-visionfive-2-v1.2a.dtb jh7110-visionfive-v2.dtb
-cd -
+#cd ${lib_dir}/starfive/
+#ln -s jh7110-starfive-visionfive-2-v1.2a.dtb jh7110-visionfive-v2.dtb
+#cd -
 
 
 # cp your latest dtb file,e.g, cp /usr/lib/linux-image-xx-riscv64
 # need you confirm it here
-cat <<EOF >> /etc/default/u-boot
-U_BOOT_PARAMETERS="rw console=tty0 console=ttyS0,115200 earlycon rootwait stmmaceth=chain_mode:1 selinux=0"
-EOF
+#cat <<EOF >> /etc/default/u-boot
+#U_BOOT_PARAMETERS="rw console=tty0 console=ttyS0,115200 earlycon rootwait stmmaceth=chain_mode:1 selinux=0"
+#EOF
 
 cat /boot/extlinux/extlinux.conf
 
@@ -89,10 +75,10 @@ cat /boot/extlinux/extlinux.conf
 mkdir -p /boot/efi
 
 # setup uboot uEnv
-cat <<EOF > /boot/uEnv.txt
-kernel_comp_addr_r=0xb0000000
-kernel_comp_size=0x10000000
-EOF
+#cat <<EOF > /boot/uEnv.txt
+#kernel_comp_addr_r=0xb0000000
+#kernel_comp_size=0x10000000
+#EOF
 
 # Set hostname
 echo vf2 > /etc/hostname
@@ -115,7 +101,7 @@ EOF
 rm -rf /etc/apt/sources.list.d/multistrap-debian.list
 
 cat > /etc/apt/sources.list <<EOF
-deb https://mirror.iscas.ac.cn/debian sid main non-free-firmware
+deb https://http://deb.debian.org/debian sid main non-free-firmware
 EOF
 
 #

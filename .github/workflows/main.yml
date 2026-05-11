@@ -14,7 +14,7 @@ jobs:
       contents: write
 
     steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v6
 
         - name: Set up Git
           run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
@@ -36,8 +36,9 @@ jobs:
 
         - name: Create vf2 rootfs
           run: |
-            export DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 vf2 
-            KERNEL_VERSION=${{ github.ref_name }} docker-compose up vf2
+            export DOCKER_BUILDKIT=1
+            export COMPOSE_DOCKER_CLI_BUILD=1
+            docker compose up vf2
             ls -l image/*
         - name: Release
           uses: softprops/action-gh-release@v1

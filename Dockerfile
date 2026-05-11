@@ -21,7 +21,7 @@ RUN --mount=type=cache,sharing=shared,target=/var/cache \
         git gperf kmod libexpat-dev \
         libgmp-dev libmpc-dev libmpfr-dev libssl-dev \
         libtool mmdebstrap openssl parted \
-        patchutils python3 python3-dev python3-distutils \
+        patchutils python3 python3-dev \
         python3-setuptools  swig \
         systemd-container texinfo zlib1g-dev wget arch-test
 
@@ -39,4 +39,4 @@ COPY create_image.sh build.sh ./
 COPY rootfs/setup_rootfs.sh ./rv64-port/ 
 COPY rootfs/setup_rootfs.sh /tmp 
 
-CMD /builder/build.sh ${KERNEL_VERSION}
+CMD /builder/build.sh
